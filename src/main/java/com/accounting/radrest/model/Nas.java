@@ -7,39 +7,37 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
+/**
+ * Entidad nativa de FreeRADIUS para el inventario de Servidores de Acceso a la Red (NAS).
+ * Alineado con la sección 7.5 de la especificación de arquitectura.
+ */
+
+@Data
 @Entity
 @Table(name = "nas", indexes = {
     @Index(name = "nas_nasname_idx", columnList = "nasname")
 })
-@Getter
-@Setter
 public class Nas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
-    @Column(name = "nasname", columnDefinition = "text", nullable = false)
+    @Column(name = "nasname", nullable = false, columnDefinition = "text")
     private String nasName;
 
-    @NotBlank
-    @Column(name = "shortname", columnDefinition = "text", nullable = false)
+    @Column(name = "shortname", nullable = false, columnDefinition = "text")
     private String shortName;
 
-    @NotBlank
-    @Column(name = "type", columnDefinition = "text", nullable = false)
-    private String type = "other";
+    @Column(name = "type", nullable = false, columnDefinition = "text")
+    private String type;
 
     @Column(name = "ports")
     private Integer ports;
 
-    @NotBlank
-    @Column(name = "secret", columnDefinition = "text", nullable = false)
+    @Column(name = "secret", nullable = false, columnDefinition = "text")
     private String secret;
 
     @Column(name = "server", columnDefinition = "text")

@@ -1,35 +1,34 @@
 package com.accounting.radrest.model;
 
-import jakarta.persistence.UniqueConstraint;
+import java.time.OffsetDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
-import java.time.OffsetDateTime;
+/**
+ * Entidad nativa de FreeRADIUS para la auditoría de intentos de acceso.
+ * Alineado con la sección 7.7 de la especificación de arquitectura.
+ */
 
+@Data
 @Entity
 @Table(name = "radpostauth", indexes = {
     @Index(name = "radpostauth_username_idx", columnList = "username"),
     @Index(name = "radpostauth_class_idx", columnList = "class")
 })
-@Getter
-@Setter
 public class RadPostAuth {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @Column(name = "username", columnDefinition = "text", nullable = false)
+    @Column(name = "username", nullable = false, columnDefinition = "text")
     private String username;
 
     @Column(name = "pass", columnDefinition = "text")
@@ -44,10 +43,9 @@ public class RadPostAuth {
     @Column(name = "callingstationid", columnDefinition = "text")
     private String callingStationId;
 
-    @NotNull
-    @Column(name = "authdate", nullable = false, updatable = false)
-    private OffsetDateTime authDate = OffsetDateTime.now();
+    @Column(name = "authdate", nullable = false, columnDefinition = "timestamp with time zone")
+    private OffsetDateTime authDate;
 
     @Column(name = "class", columnDefinition = "text")
-    private String clazz;
+    private String clazz; // 'class' es palabra reservada en Java
 }

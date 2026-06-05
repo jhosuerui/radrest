@@ -1,46 +1,39 @@
 package com.accounting.radrest.model;
 
-import jakarta.persistence.UniqueConstraint;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 
-import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.Setter;
+/**
+ * Entidad nativa de FreeRADIUS para los atributos de retorno grupales.
+ * Alineado con la sección 7.4 de la especificación de arquitectura.
+ */
 
+@Data
 @Entity
 @Table(name = "radgroupreply", indexes = {
-    @Index(name = "radgroupreply_groupname_attr_idx", columnList = "GroupName, Attribute")
+    @Index(name = "radgroupreply_groupname_idx", columnList = "groupname, attribute")
 })
-@Getter
-@Setter
 public class RadGroupReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @Column(name = "groupname", columnDefinition = "text", nullable = false)
-    private String groupName = "";
+    @Column(name = "groupname", nullable = false, columnDefinition = "text")
+    private String groupName;
 
-    @NotNull
-    @Column(name = "attribute", columnDefinition = "text", nullable = false)
-    private String attribute = "";
+    @Column(name = "attribute", nullable = false, columnDefinition = "text")
+    private String attribute;
 
-    @NotNull
-    @Size(max = 2)
-    @Column(name = "op", length = 2, nullable = false)
-    private String op = "=";
+    @Column(name = "op", nullable = false, length = 2)
+    private String op;
 
-    @NotNull
-    @Column(name = "value", columnDefinition = "text", nullable = false)
-    private String value = "";
+    @Column(name = "value", nullable = false, columnDefinition = "text")
+    private String value;
 }

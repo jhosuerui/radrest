@@ -1,30 +1,26 @@
 package com.accounting.radrest.model;
 
-import jakarta.persistence.UniqueConstraint;
+import java.time.OffsetDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import lombok.Data;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-import java.time.OffsetDateTime;
+/**
+ * Entidad nativa de FreeRADIUS para el registro de contabilidad de sesiones de red (AAA).
+ * Alineado con la sección 7.6 de la especificación de arquitectura.
+ */
 
+@Data
 @Entity
 @Table(name = "radacct", indexes = {
-    @Index(name = "radacct_active_session_idx", columnList = "acctuniqueid"),
-    @Index(name = "radacct_bulk_close", columnList = "nasipaddress, acctstarttime"),
-    @Index(name = "radacct_start_user_idx", columnList = "acctstarttime, username")
+    @Index(name = "radacct_active_session_idx", columnList = "acctuniqueid") // Índice condicional en BD (WHERE acctstoptime IS NULL)
 })
-@Getter
-@Setter
 public class RadAcct {
 
     @Id
@@ -39,13 +35,12 @@ public class RadAcct {
     private String acctUniqueId;
 
     @Column(name = "username", columnDefinition = "text")
-    private String userName;
+    private String username;
 
     @Column(name = "realm", columnDefinition = "text")
     private String realm;
 
-    @JdbcTypeCode(SqlTypes.INET)
-    @Column(name = "nasipaddress", nullable = false)
+    @Column(name = "nasipaddress", nullable = false, columnDefinition = "inet")
     private String nasIpAddress;
 
     @Column(name = "nasportid", columnDefinition = "text")
@@ -54,13 +49,13 @@ public class RadAcct {
     @Column(name = "nasporttype", columnDefinition = "text")
     private String nasPortType;
 
-    @Column(name = "acctstarttime")
+    @Column(name = "acctstarttime", columnDefinition = "timestamp with time zone")
     private OffsetDateTime acctStartTime;
 
-    @Column(name = "acctupdatetime")
+    @Column(name = "acctupdatetime", columnDefinition = "timestamp with time zone")
     private OffsetDateTime acctUpdateTime;
 
-    @Column(name = "acctstoptime")
+    @Column(name = "acctstoptime", columnDefinition = "timestamp with time zone")
     private OffsetDateTime acctStopTime;
 
     @Column(name = "acctinterval")
@@ -99,25 +94,21 @@ public class RadAcct {
     @Column(name = "framedprotocol", columnDefinition = "text")
     private String framedProtocol;
 
-    @JdbcTypeCode(SqlTypes.INET)
-    @Column(name = "framedipaddress")
+    @Column(name = "framedipaddress", columnDefinition = "inet")
     private String framedIpAddress;
 
-    @JdbcTypeCode(SqlTypes.INET)
-    @Column(name = "framedipv6address")
+    @Column(name = "framedipv6address", columnDefinition = "inet")
     private String framedIpv6Address;
 
-    @JdbcTypeCode(SqlTypes.INET)
-    @Column(name = "framedipv6prefix")
+    @Column(name = "framedipv6prefix", columnDefinition = "inet")
     private String framedIpv6Prefix;
 
     @Column(name = "framedinterfaceid", columnDefinition = "text")
     private String framedInterfaceId;
 
-    @JdbcTypeCode(SqlTypes.INET)
-    @Column(name = "delegatedipv6prefix")
+    @Column(name = "delegatedipv6prefix", columnDefinition = "inet")
     private String delegatedIpv6Prefix;
 
     @Column(name = "class", columnDefinition = "text")
-    private String clazz;
+    private String clazz; // 'class' es palabra reservada en Java
 }
