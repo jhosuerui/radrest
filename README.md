@@ -45,6 +45,7 @@ Before running the application, you must create your local environment file usin
     DEV_DB_URL=jdbc:postgresql://localhost:5432/radius_dev
     DEV_DB_USER=your_local_user
     DEV_DB_PASS=your_local_password
+```
 
 ⚠️ CRITICAL SECURITY NOTE: The .env file contains sensitive local credentials and is automatically excluded via .gitignore. Never commit this file to version control.
 
