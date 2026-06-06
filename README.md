@@ -7,7 +7,7 @@ A powerful and easy-to-use REST API built with **Spring Boot** designed to manag
 
 * * *
 
-\## Features
+## Features
 ------------
 
 *   **User Management:** Effortlessly create, update, and delete RADIUS users (radcheck/radreply).
@@ -15,25 +15,38 @@ A powerful and easy-to-use REST API built with **Spring Boot** designed to manag
 *   **Group Management:** Organize users into groups and manage group profiles (radusergroup/radgroupcheck).
 *   **Navigation & Access Restrictions:** Assign bandwidth limits, time-based restrictions, and data caps.
 *   **Network Accounting:** Real-time tracking and querying of active sessions and historical device connections (radacct).
+*   **Environment-Based Configuration:** Multi-profile system (Development/Production) powered securely by environment variables.
 
-\## Prerequisites
+## Prerequisites
 -----------------
 
-*   Java 17 or higher
+*   Java 21 or higher
 *   PostgreSQL Database (with the FreeRADIUS schema applied)
 *   FreeRADIUS Server (configured to use the PostgreSQL backend)
 *   Maven 3.8+
 
-\## Configuration
------------------
+## Configuration & Environment Setup
+------------------------------------
 
-Configure your database connection in the `src/main/resources/application.properties` file:
+The application utilizes Spring Boot profiles (`application-dev.properties` and `application-prod.properties`) combined with a `.env` file to manage sensitive credentials securely without hardcoding them.
 
-    spring.datasource.url=jdbc:postgresql://your-server-ip:5432/radius
-    spring.datasource.username=your_radius_db_user
-    spring.datasource.password=your_radius_db_password
-    spring.jpa.hibernate.ddl-auto=validate
-    
+### Setup your Environment Variables
+
+Before running the application, you must create your local environment file using the provided skeleton template.
+
+1. **Copy the template file:**
+   In the root directory of the project, duplicate `.env-skell`[cite: 2] to create your active `.env` file:
+```bash
+   cp .env-skell .env
+
+2. **Configure your credentials:
+    Open the newly created .env file and fill in your local database credentials and server settings:
+
+    DEV_DB_URL=jdbc:postgresql://localhost:5432/radius_dev
+    DEV_DB_USER=your_local_user
+    DEV_DB_PASS=your_local_password
+
+⚠️ CRITICAL SECURITY NOTE: The .env file contains sensitive local credentials and is automatically excluded via .gitignore. Never commit this file to version control.
 
 \## Getting Started
 -------------------
@@ -43,16 +56,26 @@ Configure your database connection in the `src/main/resources/application.proper
     git clone https://github.com/your-username/your-repo-name.git
     cd your-repo-name
     
+### 2\. Prepare Environment
 
-### 2\. Build the project
+Follow the instructions in the Configuration & Environment Setup section above to create your .env file.
+
+### 3\. Build the project
 
     mvn clean package
     
 
-### 3\. Run the application
+### 4\. Run the application
 
     java -jar target/freeradius-manager-api-1.0.0.jar
     
+
+\## Running in Production Mode:
+--------------------------------
+
+To run the application in Production, switch the active profile. In production environments, credentials should be injected directly via system environment variables rather than a .env file.
+
+java -jar target/radrest-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 
 \## API Endpoint Quick Reference
 --------------------------------
