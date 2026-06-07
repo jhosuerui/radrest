@@ -21,4 +21,7 @@ public class Department {
 
     @Column(name = "description", length = 255)
     private String description;
+
+    @Column(name = "enable")
+    private boolean enable;
 }
