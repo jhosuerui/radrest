@@ -14,6 +14,14 @@ import lombok.Data;
  * Alineado con la sección 7.2 de la especificación de arquitectura.
  */
 
+/*
+ * NOTA
+ * RadCheckRepository elimina la contraseña del usuario o cambia su atributo a
+ * uno que deniegue el acceso (ej. Auth-Type := Reject). De esta forma, el
+ * usuario no puede volver a conectarse, pero su historial permanece intacto en
+ * la base de datos para reportes regulatorios.
+ */
+
 @Data
 @Entity
 @Table(name = "radcheck", indexes = {
